@@ -43,8 +43,7 @@ import (
 )
 
 const (
-	{{range .Errors}}Error{{.Name}} = "{{.Name}}" // {{.Description}}
-	{{end}}
+	{{range .Errors}}Error{{.Name}} = "{{.Name}}" // {{.Description}}{{end}}
 
 	// Error Types
 	{{range .ErrTypes}}ErrType{{.}} = "{{.}}"{{end}}

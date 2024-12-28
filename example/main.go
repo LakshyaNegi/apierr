@@ -29,8 +29,8 @@ type APIError struct {
 
 // Parse maps a CustomError to the APIError structure.
 func (e *APIError) FromCustomError(err *apierr.CustomError) error {
-	e.Code = err.StatusCode()
-	e.Message = err.UserMessage()
+	e.Code = err.StatusCode
+	e.Message = err.UserMessage
 	return nil
 }
 

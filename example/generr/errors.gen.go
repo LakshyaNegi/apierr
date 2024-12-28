@@ -9,7 +9,6 @@ import (
 
 const (
 	ErrorNotFound = "NotFound" // Resource not found error.
-	
 
 	// Error Types
 	ErrTypeERR_NOT_FOUND = "ERR_NOT_FOUND"

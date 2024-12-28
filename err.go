@@ -24,70 +24,45 @@ type ResponseWriter interface {
 
 // CustomError represents a standardized error structure.
 type CustomError struct {
-	err         error
-	statusCode  int
-	message     string
-	userMessage string
-	errType     string
-	errCode     string
-}
-
-// StatusCode returns the HTTP status code.
-func (e *CustomError) StatusCode() int {
-	return e.statusCode
-}
-
-// Message returns the internal error message.
-func (e *CustomError) Message() string {
-	return e.message
-}
-
-// UserMessage returns the user-facing error message.
-func (e *CustomError) UserMessage() string {
-	return e.userMessage
-}
-
-// ErrType returns the type of the error.
-func (e *CustomError) ErrType() string {
-	return e.errType
-}
-
-// ErrCode returns the error code.
-func (e *CustomError) ErrCode() string {
-	return e.errCode
+	BaseErr     error
+	StatusCode  int
+	Message     string
+	UserMessage string
+	ErrType     string
+	ErrCode     string
 }
 
 // Error implements the error interface.
 func (e *CustomError) Error() string {
-	return e.message
+	return e.Message
 }
 
 // Unwrap provides access to the wrapped error.
 func (e *CustomError) Unwrap() error {
-	return e.err
+	return e.BaseErr
 }
 
 // New creates a new CustomError.
 func New(statusCode int, message, userMessage, errType, errCode string) *CustomError {
 	return &CustomError{
-		err:         fmt.Errorf("custom error: %s", message),
-		statusCode:  statusCode,
-		message:     message,
-		userMessage: userMessage,
-		errType:     errType,
-		errCode:     errCode,
+		BaseErr:     fmt.Errorf("custom error: %s", message),
+		StatusCode:  statusCode,
+		Message:     message,
+		UserMessage: userMessage,
+		ErrType:     errType,
+		ErrCode:     errCode,
 	}
 }
 
 // NewFromError creates a new CustomError from an existing error.
 func NewFromError(err error, statusCode int, userMessage, errType, errCode string) *CustomError {
 	return &CustomError{
-		err:         fmt.Errorf("wrapped error: %w", err),
-		statusCode:  statusCode,
-		message:     err.Error(),
-		userMessage: userMessage,
-		errType:     errType,
-		errCode:     errCode,
+		BaseErr:     fmt.Errorf("wrapped error: %w", err),
+		StatusCode:  statusCode,
+		Message:     err.Error(),
+		UserMessage: userMessage,
+		ErrType:     errType,
+		ErrCode:     errCode,
 	}
 }
 
@@ -112,7 +87,7 @@ func NewErrHandler(creator APIErrorCreator, writerFactory func() ResponseWriter)
 				return
 			}
 
-			_ = writer.WriteResponse(customErr.StatusCode(), apiErr)
+			_ = writer.WriteResponse(customErr.StatusCode, apiErr)
 			return
 		}
 
