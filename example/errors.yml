@@ -1,0 +1,11 @@
+errors:
+  - name: NotFound
+    description: Resource not found error.
+    err_type: ERR_NOT_FOUND
+    err_code: NOT_FOUND
+    status_code: 404
+    err_msg: "%s not found"
+    display_msg: "The resource you requested does not exist."
+    args:
+      - name: resource
+        arg_type: string
