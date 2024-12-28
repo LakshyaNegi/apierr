@@ -45,7 +45,7 @@ func (e *CustomError) Unwrap() error {
 // New creates a new CustomError.
 func New(statusCode int, message, userMessage, errType, errCode string) *CustomError {
 	return &CustomError{
-		BaseErr:     fmt.Errorf("custom error: %s", message),
+		BaseErr:     fmt.Errorf("error: %s", message),
 		StatusCode:  statusCode,
 		Message:     message,
 		UserMessage: userMessage,
@@ -57,7 +57,7 @@ func New(statusCode int, message, userMessage, errType, errCode string) *CustomE
 // NewFromError creates a new CustomError from an existing error.
 func NewFromError(err error, statusCode int, userMessage, errType, errCode string) *CustomError {
 	return &CustomError{
-		BaseErr:     fmt.Errorf("wrapped error: %w", err),
+		BaseErr:     err,
 		StatusCode:  statusCode,
 		Message:     err.Error(),
 		UserMessage: userMessage,
