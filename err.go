@@ -67,6 +67,8 @@ func NewFromError(err error, statusCode int, userMessage, errType, errCode strin
 		Retryable:   retryable,
 	}
 }
+
+// NewErrHandler creates a generic error handler.
 func NewErrHandler(creator APIErrorCreator, writerFactory func() ResponseWriter) func(error) {
 	return func(werr error) {
 		var customErr *CustomError
