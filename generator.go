@@ -6,6 +6,7 @@ import (
 	"os"
 	"path"
 	"path/filepath"
+	"strings"
 	"text/template"
 
 	"gopkg.in/yaml.v2"
@@ -24,6 +25,7 @@ type ErrorDef struct {
 	ErrMsg      string   `yaml:"err_msg"`
 	DisplayMsg  string   `yaml:"display_msg"`
 	StatusCode  int      `yaml:"status_code"`
+	Retryable   bool     `yaml:"retryable"`
 	Args        []ArgDef `yaml:"args"`
 }
 
@@ -43,39 +45,65 @@ import (
 )
 
 const (
-	{{range .Errors}}Error{{.Name}} = "{{.Name}}" // {{.Description}}{{end}}
+	// Error Names
+	{{- range .Errors}}
+	Error{{.Name}} = "{{.Name}}" // {{.Description}}
+	{{- end}}
 
 	// Error Types
-	{{range .ErrTypes}}ErrType{{.}} = "{{.}}"{{end}}
+	{{- range .ErrTypes}}
+	ErrType{{.}} = "{{.}}"
+	{{- end}}
 
 	// Error Codes
-	{{range .ErrCodes}}ErrCode{{.}} = "{{.}}"{{end}}
+	{{- range .ErrCodes}}
+	ErrCode{{.}} = "{{.}}"
+	{{- end}}
 )
 
 {{range .Errors}}
 // {{.Name}}Error represents {{.Description}}.
 type {{.Name}}Error struct {
 	apierr.CustomError
-	{{range .Args}}{{.Name}} {{.ArgType}}{{end}}
+	{{- range .Args}}
+	{{.Name}} {{.ArgType}}
+	{{- end}}
 }
 
 // New{{.Name}}Error creates a new {{.Name}}Error.
 func New{{.Name}}Error(
-	{{range .Args}}{{.Name}} {{.ArgType}},{{end}}
+	{{- range .Args}}{{.Name}} {{.ArgType}},{{- end}}
 ) *apierr.CustomError {
 	return apierr.New(
 		{{.StatusCode}},
 		fmt.Sprintf(
 			"{{.ErrMsg}}",
-			{{ range .Args}}{{.Name}}, {{end }}
+			{{range .Args}}{{.Name}},{{end}}
 		),
 		"{{.DisplayMsg}}",
-		"{{.ErrType}}",	
+		"{{.ErrType}}",
 		"{{.ErrCode}}",
+		{{if .Retryable}}true{{else}}false{{end}},
 	)
 }
-{{end}}
+
+{{- $errorName := .Name -}}
+{{range .Args}}
+
+// Get{{.Name | title}} returns the value of {{.Name}} for {{$errorName}}Error.
+func (e *{{$errorName}}Error) Get{{.Name | title}}() {{.ArgType}} {
+	return e.{{.Name}}
+}
+{{end}}{{end}}
 `
+
+// TitleCase returns the input string with the first letter capitalized.
+func TitleCase(input string) string {
+	if len(input) == 0 {
+		return ""
+	}
+	return strings.ToUpper(string(input[0])) + input[1:]
+}
 
 func Generate(inputFile, outputFile string) error {
 	// Read YAML file
@@ -96,8 +124,13 @@ func Generate(inputFile, outputFile string) error {
 
 	errorsFile.ErrTypes, errorsFile.ErrCodes = uniqueErrTypesAndCodes(errorsFile.Errors)
 
-	// Parse template
-	tmpl, err := template.New("errors").Parse(errorTemplate)
+	// Define template functions.
+	funcMap := template.FuncMap{
+		"title": TitleCase, // Add TitleCase as "title" for the template.
+	}
+
+	// Parse the template with the custom function map.
+	tmpl, err := template.New("errors").Funcs(funcMap).Parse(errorTemplate)
 	if err != nil {
 		return fmt.Errorf("error parsing template: %w", err)
 	}
@@ -128,13 +161,13 @@ func Generate(inputFile, outputFile string) error {
 func uniqueErrTypesAndCodes(defs []ErrorDef) (et, ec []string) {
 	unique := make(map[string]bool, len(defs))
 	for _, def := range defs {
-		if len(def.ErrType) > 0 && !unique[def.ErrType] {
+		if len(def.ErrType) > 0 && !unique["et"+def.ErrType] {
 			et = append(et, def.ErrType)
-			unique[def.ErrType] = true
+			unique["et"+def.ErrType] = true
 		}
-		if len(def.ErrCode) > 0 && !unique[def.ErrCode] {
+		if len(def.ErrCode) > 0 && !unique["ec"+def.ErrCode] {
 			ec = append(ec, def.ErrCode)
-			unique[def.ErrCode] = true
+			unique["ec"+def.ErrCode] = true
 		}
 	}
 	return et, ec

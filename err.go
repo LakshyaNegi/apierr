@@ -3,7 +3,6 @@ package apierr
 import (
 	"errors"
 	"fmt"
-	"log/slog"
 	"net/http"
 )
 
@@ -30,6 +29,7 @@ type CustomError struct {
 	UserMessage string
 	ErrType     string
 	ErrCode     string
+	Retryable   bool // Indicates if the error is retryable
 }
 
 // Error implements the error interface.
@@ -43,7 +43,7 @@ func (e *CustomError) Unwrap() error {
 }
 
 // New creates a new CustomError.
-func New(statusCode int, message, userMessage, errType, errCode string) *CustomError {
+func New(statusCode int, message, userMessage, errType, errCode string, retryable bool) *CustomError {
 	return &CustomError{
 		BaseErr:     fmt.Errorf("error: %s", message),
 		StatusCode:  statusCode,
@@ -51,11 +51,12 @@ func New(statusCode int, message, userMessage, errType, errCode string) *CustomE
 		UserMessage: userMessage,
 		ErrType:     errType,
 		ErrCode:     errCode,
+		Retryable:   retryable,
 	}
 }
 
 // NewFromError creates a new CustomError from an existing error.
-func NewFromError(err error, statusCode int, userMessage, errType, errCode string) *CustomError {
+func NewFromError(err error, statusCode int, userMessage, errType, errCode string, retryable bool) *CustomError {
 	return &CustomError{
 		BaseErr:     err,
 		StatusCode:  statusCode,
@@ -63,10 +64,9 @@ func NewFromError(err error, statusCode int, userMessage, errType, errCode strin
 		UserMessage: userMessage,
 		ErrType:     errType,
 		ErrCode:     errCode,
+		Retryable:   retryable,
 	}
 }
-
-// NewErrHandler creates a generic error handler.
 func NewErrHandler(creator APIErrorCreator, writerFactory func() ResponseWriter) func(error) {
 	return func(werr error) {
 		var customErr *CustomError
@@ -75,15 +75,7 @@ func NewErrHandler(creator APIErrorCreator, writerFactory func() ResponseWriter)
 		if errors.As(werr, &customErr) {
 			apiErr := creator.New()
 			if err := apiErr.FromCustomError(customErr); err != nil {
-				slog.Warn(
-					"failed to process error",
-					"error", err,
-					"argument error", werr,
-				)
-
-				_ = writer.WriteResponse(http.StatusInternalServerError, map[string]string{
-					"error": "Failed to process error.",
-				})
+				_ = writer.WriteResponse(http.StatusInternalServerError, NewParseErrorError(werr, err))
 				return
 			}
 
@@ -91,8 +83,6 @@ func NewErrHandler(creator APIErrorCreator, writerFactory func() ResponseWriter)
 			return
 		}
 
-		_ = writer.WriteResponse(http.StatusInternalServerError, map[string]string{
-			"error": "Internal server error",
-		})
+		_ = writer.WriteResponse(http.StatusInternalServerError, NewInternalServerErrorError())
 	}
 }

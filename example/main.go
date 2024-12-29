@@ -4,10 +4,11 @@ import (
 	"apierr"
 	"errors"
 	"fmt"
+	"log"
 	"net/http"
 
-	"github.com/labstack/echo/v4"
-	"github.com/labstack/echo/v4/middleware"
+	"github.com/labstack/echo"
+	"github.com/labstack/echo/middleware"
 )
 
 // Creator implements apierr.APIErrorCreator for custom API errors.
@@ -40,7 +41,11 @@ func NewAPIError() apierr.APIError {
 
 func main() {
 	// Generate error definitions from YAML (if required)
-	apierr.Generate("example/errors.yml", "example/errors.gen.go")
+	err := apierr.Generate("example/errors.yml", "example/errors.gen.go")
+	if err != nil {
+		log.Fatal(err)
+		return
+	}
 
 	// Initialize Echo
 	e := echo.New()
@@ -64,7 +69,14 @@ func main() {
 	})
 
 	e.GET("/complex", func(c echo.Context) error {
-		return apierr.NewFromError(errors.New("complex error"), http.StatusUnauthorized, "Unauthorized", "AUTH_ERROR", "AUTH_401")
+		return apierr.NewFromError(
+			errors.New("complex error"),
+			http.StatusUnauthorized,
+			"Unauthorized",
+			"AUTH_ERROR",
+			"AUTH_401",
+			false,
+		)
 	})
 
 	e.GET("/test", func(c echo.Context) error {
@@ -74,6 +86,7 @@ func main() {
 			"Invalid request format",
 			"BAD_REQUEST",
 			"BR_400",
+			false,
 		)
 	})
 
@@ -84,6 +97,7 @@ func main() {
 			"Invalid data",
 			"BAD_REQUEST",
 			"BR_400",
+			false,
 		)
 		return fmt.Errorf("wrap: %w", err)
 	})
@@ -113,5 +127,6 @@ func simulateError() error {
 		"The requested resource does not exist",
 		"NOT_FOUND",
 		"NF_404",
+		false,
 	)
 }
