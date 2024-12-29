@@ -23,13 +23,14 @@ type ResponseWriter interface {
 
 // CustomError represents a standardized error structure.
 type CustomError struct {
-	BaseErr     error
-	StatusCode  int
-	Message     string
-	UserMessage string
-	ErrType     string
-	ErrCode     string
-	Retryable   bool // Indicates if the error is retryable
+	BaseErr     error                  // Base error
+	StatusCode  int                    // HTTP status code
+	Message     string                 // Error message
+	UserMessage string                 // User-friendly error message
+	ErrType     string                 // Error type
+	ErrCode     string                 // Unique error code
+	Retryable   bool                   // Indicates if the error is retryable
+	Metadata    map[string]interface{} // Additional contextual information
 }
 
 // Error implements the error interface.
@@ -42,6 +43,23 @@ func (e *CustomError) Unwrap() error {
 	return e.BaseErr
 }
 
+// SetMetadata sets a metadata key-value pair.
+func (e *CustomError) SetMetadata(key string, value interface{}) {
+	if e.Metadata == nil {
+		e.Metadata = make(map[string]interface{})
+	}
+	e.Metadata[key] = value
+}
+
+// GetMetadata returns the value of a metadata key.
+func (e *CustomError) GetMetadata(key string) (interface{}, bool) {
+	if e.Metadata == nil {
+		return nil, false
+	}
+	value, ok := e.Metadata[key]
+	return value, ok
+}
+
 // New creates a new CustomError.
 func New(statusCode int, message, userMessage, errType, errCode string, retryable bool) *CustomError {
 	return &CustomError{
@@ -52,6 +70,7 @@ func New(statusCode int, message, userMessage, errType, errCode string, retryabl
 		ErrType:     errType,
 		ErrCode:     errCode,
 		Retryable:   retryable,
+		Metadata:    make(map[string]interface{}), // Initialize an empty metadata map
 	}
 }
 
@@ -65,6 +84,7 @@ func NewFromError(err error, statusCode int, userMessage, errType, errCode strin
 		ErrType:     errType,
 		ErrCode:     errCode,
 		Retryable:   retryable,
+		Metadata:    make(map[string]interface{}), // Initialize an empty metadata map
 	}
 }
 
