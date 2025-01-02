@@ -15,6 +15,7 @@
 To use the package, run:
 ```bash
 go get github.com/LakshyaNegi/apierr
+```
 
 ## License
 
