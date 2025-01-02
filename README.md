@@ -11,6 +11,11 @@
 - **Customizable Responses**: Define developer-facing and user-facing error messages separately.
 - **Dynamic Argument Handling**: Pass and retrieve dynamic arguments for detailed error descriptions.
 
+## Installation
+To use the package, run:
+```bash
+go get github.com/LakshyaNegi/apierr
+
 ## License
 
 Copyright © 2025 Lakshya Negi.
