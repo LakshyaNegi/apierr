@@ -3,7 +3,7 @@
 package generr
 
 import (
-	"apierr"
+	"github.com/LakshyaNegi/apierr"
 	"fmt"
 )
 

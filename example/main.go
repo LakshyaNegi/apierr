@@ -1,11 +1,12 @@
 package main
 
 import (
-	"apierr"
 	"errors"
 	"fmt"
 	"log"
 	"net/http"
+
+	"github.com/LakshyaNegi/apierr"
 
 	"github.com/labstack/echo"
 	"github.com/labstack/echo/middleware"

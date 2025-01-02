@@ -1,4 +1,4 @@
-module apierr
+module github.com/LakshyaNegi/apierr
 
 go 1.22.3
 
