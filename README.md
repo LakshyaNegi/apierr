@@ -10,3 +10,9 @@
 - **Framework Agnostic**: Works seamlessly with popular frameworks like Echo, Gin, and `net/http`.
 - **Customizable Responses**: Define developer-facing and user-facing error messages separately.
 - **Dynamic Argument Handling**: Pass and retrieve dynamic arguments for detailed error descriptions.
+
+## License
+
+Copyright © 2025 Lakshya Negi.
+
+This project is under MIT license.
