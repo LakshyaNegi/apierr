@@ -69,7 +69,7 @@ func main() {
 		return errors.New("simple error")
 	})
 
-	e.GET("/complex", func(c echo.Context) error {
+	e.GET("/error", func(c echo.Context) error {
 		return apierr.NewFromError(
 			errors.New("complex error"),
 			http.StatusUnauthorized,
@@ -80,32 +80,18 @@ func main() {
 		)
 	})
 
-	e.GET("/test", func(c echo.Context) error {
-		return apierr.New(
-			http.StatusBadRequest,
-			"Bad Request",
-			"Invalid request format",
-			"BAD_REQUEST",
-			"BR_400",
-			false,
-		)
+	e.GET("/new", func(c echo.Context) error {
+		return simulateError()
 	})
 
 	e.GET("/wrap", func(c echo.Context) error {
-		err := apierr.New(
-			http.StatusBadRequest,
-			"Wrapped Bad Request",
-			"Invalid data",
-			"BAD_REQUEST",
-			"BR_400",
-			false,
-		)
-		return fmt.Errorf("wrap: %w", err)
+		return fmt.Errorf("wrap: %w", simulateError())
 	})
 
 	e.GET("/double", func(c echo.Context) error {
-		err := simulateError()
-		return fmt.Errorf("outer error: %w", fmt.Errorf("inner error: %w", err))
+		return fmt.Errorf(
+			"outer error: %w",
+			fmt.Errorf("inner error: %w", simulateError()))
 	})
 
 	e.Logger.Fatal(e.Start(":8080"))
