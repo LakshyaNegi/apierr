@@ -1,3 +1,4 @@
+package_name: errExample
 errors:
   - name: BadRequest
     description: The request is invalid or malformed.

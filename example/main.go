@@ -94,7 +94,7 @@ func main() {
 			fmt.Errorf("inner error: %w", simulateError()))
 	})
 
-	e.Logger.Fatal(e.Start(":8080"))
+	e.Logger.Fatal(e.Start("localhost:8080"))
 }
 
 // EchoResponseWriter adapts Echo's context to the apierr.ResponseWriter interface.
