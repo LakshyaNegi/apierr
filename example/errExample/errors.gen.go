@@ -17,20 +17,20 @@ const (
 	ErrorParseError = "ParseError" // Failed to parse API Error.
 
 	// Error Types
-	ErrTypeBAD_REQUEST = "BAD_REQUEST"
-	ErrTypeUNAUTHORIZED = "UNAUTHORIZED"
-	ErrTypeFORBIDDEN = "FORBIDDEN"
-	ErrTypeNOT_FOUND = "NOT_FOUND"
-	ErrTypeINTERNAL_SERVER_ERROR = "INTERNAL_SERVER_ERROR"
-	ErrTypePARSE_ERROR = "PARSE_ERROR"
+	ErrTypeBadRequest = "BAD_REQUEST"
+	ErrTypeUnauthorized = "UNAUTHORIZED"
+	ErrTypeForbidden = "FORBIDDEN"
+	ErrTypeNotFound = "NOT_FOUND"
+	ErrTypeInternalServerError = "INTERNAL_SERVER_ERROR"
+	ErrTypeParseError = "PARSE_ERROR"
 
 	// Error Codes
-	ErrCodeBAD_REQUEST = "BAD_REQUEST"
-	ErrCodeUNAUTHORIZED = "UNAUTHORIZED"
-	ErrCodeFORBIDDEN = "FORBIDDEN"
-	ErrCodeNOT_FOUND = "NOT_FOUND"
-	ErrCodeINTERNAL_SERVER_ERROR = "INTERNAL_SERVER_ERROR"
-	ErrCodePARSE_ERROR = "PARSE_ERROR"
+	ErrCodeBadRequest = "BAD_REQUEST"
+	ErrCodeUnauthorized = "UNAUTHORIZED"
+	ErrCodeForbidden = "FORBIDDEN"
+	ErrCodeNotFound = "NOT_FOUND"
+	ErrCodeInternalServerError = "INTERNAL_SERVER_ERROR"
+	ErrCodeParseError = "PARSE_ERROR"
 )
 
 
@@ -178,8 +178,8 @@ func NewParseErrorError(apiError any,error any,
 	)
 }
 
-// GetApiError returns the value of apiError for ParseErrorError.
-func (e *ParseErrorError) GetApiError() any {
+// GetApierror returns the value of apiError for ParseErrorError.
+func (e *ParseErrorError) GetApierror() any {
 	return e.apiError
 }
 

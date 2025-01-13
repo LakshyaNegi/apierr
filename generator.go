@@ -53,12 +53,12 @@ const (
 
 	// Error Types
 	{{- range .ErrTypes}}
-	ErrType{{.}} = "{{.}}"
+	ErrType{{ title . }} = "{{.}}"
 	{{- end}}
 
 	// Error Codes
 	{{- range .ErrCodes}}
-	ErrCode{{.}} = "{{.}}"
+	ErrCode{{ title . }} = "{{.}}"
 	{{- end}}
 )
 
@@ -103,7 +103,15 @@ func TitleCase(input string) string {
 	if len(input) == 0 {
 		return ""
 	}
-	return strings.ToUpper(string(input[0])) + input[1:]
+
+	// Convert into camel case.
+	parts := strings.Split(input, "_")
+
+	for i, part := range parts {
+		parts[i] = strings.ToUpper(string(part[0])) + strings.ToLower(part[1:])
+	}
+
+	return strings.Join(parts, "")
 }
 
 func Generate(inputFile, outputFile string) error {
@@ -164,11 +172,11 @@ func uniqueErrTypesAndCodes(defs []ErrorDef) (et, ec []string) {
 	for _, def := range defs {
 		if len(def.ErrType) > 0 && !unique["et"+def.ErrType] {
 			et = append(et, def.ErrType)
-			unique["et"+def.ErrType] = true
+			unique["et"+strings.ToLower(def.ErrType)] = true
 		}
 		if len(def.ErrCode) > 0 && !unique["ec"+def.ErrCode] {
 			ec = append(ec, def.ErrCode)
-			unique["ec"+def.ErrCode] = true
+			unique["ec"+strings.ToLower(def.ErrCode)] = true
 		}
 	}
 	return et, ec
