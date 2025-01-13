@@ -1,65 +1,65 @@
-package_name: errExample
+packageName: errExample
 errors:
   - name: BadRequest
     description: The request is invalid or malformed.
-    err_type: BAD_REQUEST
-    err_code: BAD_REQUEST
-    err_msg: "Invalid request: %s"
-    display_msg: "The request is invalid."
-    status_code: 400
+    errType: BAD_REQUEST
+    errCode: BAD_REQUEST
+    errMsg: "Invalid request: %s"
+    displayMsg: "The request is invalid."
+    statusCode: 400
     args:
       - name: details
-        arg_type: string
+        argType: string
 
   - name: Unauthorized
     description: The user is not authorized to perform this action.
-    err_type: UNAUTHORIZED
-    err_code: UNAUTHORIZED
-    err_msg: "Unauthorized access"
-    display_msg: "You are not authorized to access this resource."
-    status_code: 401
+    errType: UNAUTHORIZED
+    errCode: UNAUTHORIZED
+    errMsg: "Unauthorized access"
+    displayMsg: "You are not authorized to access this resource."
+    statusCode: 401
     args: []
 
   - name: Forbidden
     description: The user does not have permission to access this resource.
-    err_type: FORBIDDEN
-    err_code: FORBIDDEN
-    err_msg: "Forbidden: You do not have permission to access %s."
-    display_msg: "You do not have permission to access this resource."
-    status_code: 403
+    errType: FORBIDDEN
+    errCode: FORBIDDEN
+    errMsg: "Forbidden: You do not have permission to access %s."
+    displayMsg: "You do not have permission to access this resource."
+    statusCode: 403
     args:
       - name: resource
-        arg_type: string
+        argType: string
 
   - name: NotFound
     description: The requested resource could not be found.
-    err_type: NOT_FOUND
-    err_code: NOT_FOUND
-    err_msg: "%s not found"
-    display_msg: "The requested resource could not be found."
-    status_code: 404
+    errType: NOT_FOUND
+    errCode: NOT_FOUND
+    errMsg: "%s not found"
+    displayMsg: "The requested resource could not be found."
+    statusCode: 404
     args:
       - name: resource
-        arg_type: string
+        argType: string
 
   - name: InternalServerError
     description: An unexpected server error occurred.
-    err_type: INTERNAL_SERVER_ERROR
-    err_code: INTERNAL_SERVER_ERROR
-    err_msg: "Internal server error"
-    display_msg: "Something went wrong. Please try again later."
-    status_code: 500
+    errType: INTERNAL_SERVER_ERROR
+    errCode: INTERNAL_SERVER_ERROR
+    errMsg: "Internal server error"
+    displayMsg: "Something went wrong. Please try again later."
+    statusCode: 500
     args: []
 
   - name: ParseError
     description: Failed to parse API Error.
-    err_type: PARSE_ERROR
-    err_code: PARSE_ERROR
-    err_msg: "failed to api_error :%v, parse error :%v"
-    display_msg: "Something went wrong. Please try again later."
-    status_code: 500
+    errType: PARSE_ERROR
+    errCode: PARSE_ERROR
+    errMsg: "failed to parse API error :%v, parse error :%v"
+    displayMsg: "Something went wrong. Please try again later."
+    statusCode: 500
     args:
       - name: apiError
-        arg_type: any
+        argType: any
       - name: error
-        arg_type: any
+        argType: any

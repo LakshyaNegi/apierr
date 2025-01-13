@@ -168,7 +168,7 @@ func NewParseErrorError(apiError any,error any,
 	return apierr.New(
 		500,
 		fmt.Sprintf(
-			"failed to api_error :%v, parse error :%v",
+			"failed to parse API error :%v, parse error :%v",
 			apiError,error,
 		),
 		"Something went wrong. Please try again later.",
