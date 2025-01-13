@@ -61,5 +61,5 @@ errors:
     args:
       - name: apiError
         argType: any
-      - name: error
-        argType: any
+      - name: err
+        argType: error

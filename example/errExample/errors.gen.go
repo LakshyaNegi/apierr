@@ -159,17 +159,17 @@ func NewInternalServerErrorError(
 type ParseErrorError struct {
 	apierr.CustomError
 	apiError any
-	error any
+	err error
 }
 
 // NewParseErrorError creates a new ParseErrorError.
-func NewParseErrorError(apiError any,error any,
+func NewParseErrorError(apiError any,err error,
 ) *apierr.CustomError {
 	return apierr.New(
 		500,
 		fmt.Sprintf(
 			"failed to parse API error :%v, parse error :%v",
-			apiError,error,
+			apiError,err,
 		),
 		"Something went wrong. Please try again later.",
 		"PARSE_ERROR",
@@ -184,8 +184,8 @@ func (e *ParseErrorError) GetApierror() any {
 }
 
 
-// GetError returns the value of error for ParseErrorError.
-func (e *ParseErrorError) GetError() any {
-	return e.error
+// GetErr returns the value of err for ParseErrorError.
+func (e *ParseErrorError) GetErr() error {
+	return e.err
 }
 
