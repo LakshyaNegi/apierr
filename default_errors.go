@@ -66,9 +66,7 @@ type UnauthorizedError struct {
 func NewUnauthorizedError() *CustomError {
 	return New(
 		401,
-		fmt.Sprintf(
-			"Unauthorized access",
-		),
+		"Unauthorized access",
 		"You are not authorized to access this resource.",
 		"UNAUTHORIZED",
 		"UNAUTHORIZED",
@@ -139,9 +137,7 @@ type InternalServerErrorError struct {
 func NewInternalServerErrorError() *CustomError {
 	return New(
 		500,
-		fmt.Sprintf(
-			"Internal server error",
-		),
+		"Internal server error",
 		"Something went wrong. Please try again later.",
 		"INTERNAL_SERVER_ERROR",
 		"INTERNAL_SERVER_ERROR",
