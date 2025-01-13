@@ -116,7 +116,7 @@ func TitleCase(input string) string {
 
 func Generate(inputFile, outputFile string) error {
 	// Read YAML file
-	data, err := os.ReadFile(inputFile)
+	data, err := os.ReadFile(filepath.Clean(inputFile))
 	if err != nil {
 		return fmt.Errorf("error reading YAML file: %w", err)
 	}
@@ -145,13 +145,14 @@ func Generate(inputFile, outputFile string) error {
 	}
 
 	// Create output file
-	dir := path.Join(filepath.Dir(outputFile), errorsFile.PackageName)
-	err = os.MkdirAll(dir, 0755)
+	dir := path.Join(filepath.Dir(outputFile), filepath.Clean(errorsFile.PackageName))
+
+	err = os.MkdirAll(dir, 0750)
 	if err != nil {
 		return fmt.Errorf("error creating output directory: %w", err)
 	}
 
-	fname := filepath.Base(outputFile)
+	fname := filepath.Base(filepath.Clean(outputFile))
 	out, err := os.Create(filepath.Join(dir, fname))
 	if err != nil {
 		return fmt.Errorf("error creating output file: %w", err)
