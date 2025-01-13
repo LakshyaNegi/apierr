@@ -42,7 +42,8 @@ func NewAPIError() apierr.APIError {
 
 func main() {
 	// Generate error definitions from YAML (if required)
-	err := apierr.Generate("example/errors.yml", "example/errors.gen.go")
+	err := apierr.Generate("example/errors.yml", "example/errors.gen.go", nil)
+
 	if err != nil {
 		log.Fatal(err)
 		return
