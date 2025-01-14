@@ -30,6 +30,7 @@ type CustomError struct {
 	ErrType     string                 // Error type
 	ErrCode     string                 // Unique error code
 	Retryable   bool                   // Indicates if the error is retryable
+	RequestID   *string                // Request ID associated with the error
 	Metadata    map[string]interface{} // Additional contextual information
 }
 
@@ -41,6 +42,17 @@ func (e *CustomError) Error() string {
 // Unwrap provides access to the wrapped error.
 func (e *CustomError) Unwrap() error {
 	return e.BaseErr
+}
+
+// GetBaseError returns the base error.
+func (e *CustomError) GetBaseError() error {
+	return e.BaseErr
+}
+
+// WithRequestID sets the request ID associated with the error.
+func (e *CustomError) WithRequestID(requestID string) *CustomError {
+	e.RequestID = &requestID
+	return e
 }
 
 // SetMetadata sets a metadata key-value pair.
