@@ -81,6 +81,7 @@ func NewUnauthorizedError(
 		false,
 	)
 }
+
 // ForbiddenError represents The user does not have permission to access this resource..
 type ForbiddenError struct {
 	apierr.CustomError
@@ -155,6 +156,7 @@ func NewInternalServerErrorError(
 		false,
 	)
 }
+
 // ParseErrorError represents Failed to parse API Error..
 type ParseErrorError struct {
 	apierr.CustomError
@@ -182,7 +184,6 @@ func NewParseErrorError(apiError any,err error,
 func (e *ParseErrorError) GetApierror() any {
 	return e.apiError
 }
-
 
 // GetErr returns the value of err for ParseErrorError.
 func (e *ParseErrorError) GetErr() error {

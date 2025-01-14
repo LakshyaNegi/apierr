@@ -99,8 +99,8 @@ func New{{.Name}}Error(
 // Get{{.Name | title}} returns the value of {{.Name}} for {{$errorName}}Error.
 func (e *{{$errorName}}Error) Get{{.Name | title}}() {{.ArgType}} {
 	return e.{{.Name}}
-}
-{{end}}{{end}}
+}{{end}}
+{{end}}
 `
 
 // TitleCase returns the input string with the first letter capitalized.
